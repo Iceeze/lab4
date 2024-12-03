@@ -17,6 +17,7 @@ public class Main {
         System.out.println("4. Функция (3.1)");
         System.out.println("5. Фильтр (3.2)");
         System.out.println("6. Сокращение (3.3)");
+        System.out.println("7. Коллекционирование (3.4)");
         System.out.print("\nВыберите номер задания: ");
         String choice = scanner.next();
 
