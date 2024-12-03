@@ -1,9 +1,8 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 
 public class Main {
@@ -146,6 +145,30 @@ public class Main {
                 List<List<Integer>> listOfLists = createIntList(scanner);
                 int totalElements = reduceListOfLists(listOfLists);
                 System.out.println("Общее количество элементов во всех списках: " + totalElements);
+            } break;
+
+            // Задание 3.4
+            case "7": {
+                // Разделение чисел на положительные и отрицательные
+                List<Integer> numberList = Arrays.asList(1, -3, 7);
+                List<Integer> positiveNumbers = collect(numberList, ArrayList::new, num -> num > 0); // Положительные
+                List<Integer> negativeNumbers7 = collect(numberList, ArrayList::new, num -> num < 0); // Отрицательные
+                System.out.println("Положительные числа: " + positiveNumbers);
+                System.out.println("Отрицательные числа: " + negativeNumbers7);
+
+                // Разбиение строк по длине
+                List<String> stringList = Arrays.asList("qwerty", "asdfg", "zx", "qw");
+                Map<Integer, List<String>> groupStrings = new HashMap<>();
+                for (String str : stringList) {
+                    int length = str.length();
+                    groupStrings.computeIfAbsent(length, k -> new ArrayList<>()).add(str);
+                }
+                System.out.println("Строки по длине: " + groupStrings);
+
+                // Уникальные строки
+                List<String> uniqueStrings = Arrays.asList("qwerty", "asdfg", "qwerty", "qw");
+                Set<String> uniqueSet = collect(uniqueStrings, HashSet::new, str -> true); // Используем Set для хранения уникальных строк, так как Set не допускает дубликатов
+                System.out.println("Уникальные строки: " + uniqueSet);
             } break;
 
             default: System.out.println("Данного задания нет в списке.");
@@ -293,7 +316,7 @@ public class Main {
         for (T item : list) {  // Проход по каждому элементу списка
             result = accumulator.apply(result, item);  // Применение операции сворачивания
         }
-        return result;  // Возвращаем итоговое значение
+        return result;
     }
 
     // Метод для работы с списком списков и подсчёта их элементов
@@ -304,6 +327,17 @@ public class Main {
                 totalElements++;  // Увеличиваем счетчик для каждого элемента
             }
         }
-        return totalElements;  // Возвращаем общее количество элементов
+        return totalElements;
+    }
+
+    // Обобщенный метод для коллекционирования
+    public static <T, P extends Collection<T>> P collect(List<T> sourceList, Supplier<P> collectionFactory, Function<T, Boolean> filterFunction) {
+        P resultCollection = collectionFactory.get();
+
+        // Применение фильтра для каждого элемента исходного списка
+        for (T item : sourceList) {
+            if (filterFunction.apply(item)) resultCollection.add(item);
+        }
+        return resultCollection;
     }
 }
